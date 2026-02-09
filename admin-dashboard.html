@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard | EduPort</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --sidebar-width: 260px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      -webkit-font-smoothing: antialiased;
+    }
+    .sidebar {
+      width: var(--sidebar-width);
+      background: #0f172a;
+      height: 100vh;
+      color: white;
+      position: fixed;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+    .sidebar h2 {
+      font-size: 1.2rem;
+      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .nav-links { list-style: none; padding: 0; flex-grow: 1; }
+    .nav-links li { margin-bottom: 0.5rem; }
+    .nav-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-radius: var(--radius);
+      font-weight: 500;
+      font-size: 0.9375rem;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-links a.active, .nav-links a:hover {
+      background: rgba(255,255,255,0.08);
+      color: white;
+    }
+    .main-content {
+      margin-left: var(--sidebar-width);
+      width: calc(100% - var(--sidebar-width));
+      padding: 2.5rem;
+    }
+    .table-container {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    th {
+      background: var(--bg);
+      padding: 1rem 1.5rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 1.25rem 1.5rem;
+      border-top: 1px solid var(--border-light);
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+    tbody tr { cursor: pointer; transition: background 0.15s; }
+    tbody tr:hover { background: var(--bg); }
+    .status {
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-block;
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(6px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: var(--white);
+      width: 480px;
+      max-width: 95vw;
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--border);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .modal-header h3 { margin: 0; font-size: 1.2rem; font-weight: 700; }
+    .detail-row { display: flex; justify-content: space-between; padding: 0.65rem 0; border-bottom: 1px solid var(--border-light); }
+    .detail-label { color: var(--text-muted); font-weight: 500; font-size: 0.85rem; }
+    .detail-value { font-weight: 600; font-size: 0.9rem; }
+    .modal-actions { display: flex; gap: 12px; margin-top: 2rem; }
+    .modal-actions .btn { flex: 1; padding: 0.75rem; border-radius: var(--radius); border: none; font-weight: 600; cursor: pointer; font-size: 0.9375rem; transition: transform 0.2s, opacity 0.2s; }
+    .btn-accept { background: var(--success); color: white; }
+    .btn-reject { background: var(--danger-bg); color: var(--danger); }
+    .modal-actions .btn:hover { opacity: 0.95; transform: translateY(-1px); }
+    .btn-logout {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid #334155;
+      color: #94a3b8;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      margin-top: auto;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .btn-logout:hover { background: var(--danger); color: white; border-color: var(--danger); }
+    .stats-row { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+      min-width: 180px;
+      box-shadow: var(--shadow);
+    }
+    .stat-card .stat-value { font-size: 1.75rem; font-weight: 800; color: var(--primary); }
+    .stat-card .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .chart-container {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      max-width: 640px;
+    }
+    .chart-container h3 { margin: 0 0 1rem; font-size: 0.9375rem; color: var(--text-muted); font-weight: 600; }
+    .view { display: none; }
+    .view.active { display: block; }
+    .course-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 0.75rem;
+      background: var(--white);
+    }
+    .course-row .course-name { font-weight: 600; }
+    .course-row .course-meta { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .btn-remove { background: var(--danger-bg); color: var(--danger); border: none; padding: 0.5rem 0.75rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: background 0.2s, color 0.2s; }
+    .btn-remove:hover { background: var(--danger); color: white; }
+    .add-course-form {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      max-width: 480px;
+      box-shadow: var(--shadow);
+    }
+    .add-course-form h3 { margin: 0 0 1rem; font-size: 1rem; font-weight: 700; }
+    .add-course-form label { display: block; font-size: 0.85rem; margin-bottom: 0.35rem; }
+    .add-course-form input, .add-course-form textarea, .add-course-form select {
+      width: 100%; padding: 0.65rem 0.75rem; margin-bottom: 1rem; border: 1px solid var(--border); border-radius: var(--radius); font-family: inherit; box-sizing: border-box; background: var(--white);
+    }
+    .add-course-form textarea { min-height: 60px; resize: vertical; }
+    .btn-add { background: var(--primary); color: white; border: none; padding: 0.65rem 1rem; border-radius: var(--radius); font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.2s; }
+    .btn-add:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    #coursesList:empty::after { content: "No courses yet. Add one below."; display: block; padding: 1rem; color: var(--text-muted); font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Registration Details</h3>
+        <i class="fas fa-times" style="cursor:pointer; color:var(--text-muted)" onclick="closeModal()"></i>
+      </div>
+      <div id="modalContent">
+        <div class="detail-row"><span class="detail-label">Name</span> <span class="detail-value" id="mName"></span></div>
+        <div class="detail-row"><span class="detail-label">Email</span> <span class="detail-value" id="mEmail"></span></div>
+        <div class="detail-row"><span class="detail-label">Phone</span> <span class="detail-value" id="mPhone"></span></div>
+        <div class="detail-row"><span class="detail-label">Address</span> <span class="detail-value" id="mAddress"></span></div>
+        <div class="detail-row"><span class="detail-label">Course</span> <span class="detail-value" id="mCourse"></span></div>
+        <div class="detail-row"><span class="detail-label">Date</span> <span class="detail-value" id="mDate"></span></div>
+        <div class="detail-row"><span class="detail-label">Status</span> <span class="detail-value" id="mStatus"></span></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-accept" onclick="updateStatusFromModal('Accepted')">Accept</button>
+        <button class="btn btn-reject" onclick="updateStatusFromModal('Rejected')">Reject</button>
+      </div>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <h2><i class="fas fa-graduation-cap"></i> EduPort Admin</h2>
+    <ul class="nav-links">
+      <li><a href="#" id="navDashboard" class="active" onclick="showView('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="#" id="navCourses" onclick="showView('courses')"><i class="fas fa-book"></i> Courses</a></li>
+    </ul>
+    <button class="btn-logout" onclick="logoutAdmin()">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
+  </aside>
+
+  <main class="main-content">
+    <!-- Dashboard View -->
+    <div id="dashboardView" class="view active">
+      <div class="header" style="margin-bottom: 1.5rem;">
+        <h1>Dashboard</h1>
+        <p style="color: var(--text-muted)">Student registrations appear here. Click a row to view details, then Accept or Reject. Rejected rows are removed from this list; status updates for the user in My Registrations.</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" id="totalRegs">0</div>
+          <div class="stat-label">Total registrations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalStudents">0</div>
+          <div class="stat-label">Unique students</div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <h3>Registrations per course</h3>
+        <canvas id="courseChart" height="220"></canvas>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Course</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="regList"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Courses View -->
+    <div id="coursesView" class="view">
+      <div class="header" style="margin-bottom: 1.5rem;">
+        <h1>Courses</h1>
+        <p style="color: var(--text-muted)">Add or remove courses. Students see these on the Classes page.</p>
+      </div>
+
+      <div class="add-course-form">
+        <h3>Add new course</h3>
+        <label for="newCourseName">Course name</label>
+        <input type="text" id="newCourseName" placeholder="e.g. Digital Marketing">
+        <label for="newCourseCategory">Category</label>
+        <select id="newCourseCategory">
+          <option value="Soft Skills">Soft Skills</option>
+          <option value="IT">IT</option>
+        </select>
+        <label for="newCourseDesc">Short description</label>
+        <textarea id="newCourseDesc" placeholder="Brief description for students"></textarea>
+        <label for="newCourseSlots">Seats available</label>
+        <input type="number" id="newCourseSlots" placeholder="e.g. 15" min="1">
+        <button type="button" class="btn-add" onclick="addCourse()"><i class="fas fa-plus"></i> Add course</button>
+      </div>
+
+      <div id="coursesList"></div>
+    </div>
+  </main>
+
+  <script src="js/admin.js"></script>
+  <script>
+    // Close modal if clicking outside
+    window.onclick = function(event) {
+      let modal = document.getElementById('detailModal');
+      if (event.target == modal) typeof closeModal === 'function' && closeModal();
+    }
+  </script>
+
+</body>
+</html>

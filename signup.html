@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create Account | EduPort</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(165deg, #eef2ff 0%, var(--bg) 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .card {
+      background: var(--white);
+      padding: 2.5rem 2rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      width: 100%;
+      max-width: 420px;
+      border: 1px solid var(--border);
+    }
+    .logo {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--primary), #6366f1);
+      color: white;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin: 0 auto 1.5rem;
+    }
+    h2 { font-size: 1.5rem; font-weight: 800; color: var(--text); margin: 0 0 0.35rem; letter-spacing: -0.02em; }
+    .subtitle { color: var(--text-muted); font-size: 0.9375rem; margin-bottom: 2rem; line-height: 1.5; }
+    .form-group { text-align: left; margin-bottom: 1.25rem; }
+    label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text); }
+    .input-wrap { position: relative; }
+    .input-wrap i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      background: var(--bg);
+    }
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: var(--white);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    input.input-error {
+      border-color: #dc2626;
+      background: #fef2f2;
+    }
+    input.input-error:focus {
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+    }
+    .error-msg {
+      display: none;
+      font-size: 0.8125rem;
+      color: #dc2626;
+      margin-top: 0.35rem;
+      font-weight: 500;
+    }
+    button {
+      width: 100%;
+      padding: 0.875rem;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: 1rem;
+    }
+    .form-footer { margin-top: 1.75rem; font-size: 0.9rem; color: var(--text-muted); }
+    .form-footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .back:hover { color: var(--primary); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo"><i class="fas fa-user-plus"></i></div>
+    <h2>Create your account</h2>
+    <p class="subtitle">Join EduPort to enroll in courses and summer camps. One account for all your learning.</p>
+    <div class="form-card">
+      <div class="form-group">
+        <label for="name">Full name</label>
+        <div class="input-wrap">
+          <i class="fas fa-user"></i>
+          <input type="text" id="name" placeholder="e.g. Alex Johnson" autocomplete="name" oninput="clearFieldError('name')">
+        </div>
+        <span id="name-error" class="error-msg"></span>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="input-wrap">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email" oninput="clearFieldError('email')">
+        </div>
+        <span id="email-error" class="error-msg"></span>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" placeholder="At least 8 characters" autocomplete="new-password" oninput="clearFieldError('password')">
+        </div>
+        <span id="password-error" class="error-msg"></span>
+      </div>
+      <button onclick="signup()">Create account</button>
+      <p class="form-footer">Already have an account? <a href="login.html">Sign in</a></p>
+    </div>
+    <a href="index.html" class="back"><i class="fas fa-arrow-left"></i> Back to home</a>
+  </div>
+  <script src="js/auth.js"></script>
+</body>
+</html>

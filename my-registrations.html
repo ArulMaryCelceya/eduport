@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Registrations | EduPort</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <style>
+    body { margin: 0; background: var(--bg); color: var(--text); }
+    .container { max-width: 720px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+    header { text-align: center; margin-bottom: 2rem; }
+    h1 { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 800; margin: 0 0 0.5rem; color: var(--text); letter-spacing: -0.02em; }
+    .subtitle { color: var(--text-muted); font-size: 1rem; }
+    #myList { display: flex; flex-direction: column; gap: 1rem; }
+    .reg-item {
+      background: var(--white);
+      padding: 1.25rem 1.5rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      transition: all 0.2s;
+      box-shadow: var(--shadow);
+    }
+    .reg-item:hover {
+      border-color: var(--primary-light);
+      box-shadow: var(--shadow-md);
+    }
+    .reg-info h4 { margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--text); }
+    .reg-info .course { font-size: 0.9rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .reg-info .date { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
+    .status-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.4rem 0.85rem;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 3.5rem 2rem;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 2px dashed var(--border);
+      color: var(--text-muted);
+    }
+    .empty-state i { font-size: 3rem; margin-bottom: 1rem; display: block; color: var(--border); }
+    .empty-state p { margin: 0; font-size: 1rem; }
+    .back-wrap { text-align: center; margin-top: 2rem; }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9375rem;
+    }
+    .back-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <script src="js/auth-guard.js"></script>
+  <nav class="navbar">
+    <a href="classes.html" class="brand"><i class="fas fa-graduation-cap"></i> EduPort</a>
+    <div class="links">
+      <a href="classes.html">Classes</a>
+      <a href="summer-camp.html">Summer Camp</a>
+      <a href="my-registrations.html" class="active">My Registrations</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header>
+      <h1>My registrations</h1>
+      <p class="subtitle">See your enrollments and their status. Accepted means you’re in; we’ll contact you if needed.</p>
+    </header>
+    <div id="myList"></div>
+    <div class="back-wrap">
+      <a href="classes.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to classes</a>
+    </div>
+  </div>
+
+  <script>
+    let user = JSON.parse(localStorage.getItem("currentUser"));
+    let registrations = JSON.parse(localStorage.getItem("registrations")) || [];
+    let myList = document.getElementById("myList");
+
+    if (!user) {
+      window.location.href = "login.html";
+    } else {
+      const userRegs = registrations.filter(r => r.userEmail === user.email);
+
+      if (userRegs.length === 0) {
+        myList.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-folder-open"></i>
+            <p>You haven’t registered for any classes or camps yet.</p>
+            <p style="margin-top:0.5rem; font-size:0.9rem;">Go to Classes or Summer Camp to enroll.</p>
+          </div>
+        `;
+      } else {
+        userRegs.forEach(r => {
+          const s = (r.status || 'Pending').toLowerCase();
+          const statusClass = s === 'accepted' ? 'status-accepted' : (s === 'rejected' ? 'status-rejected' : 'status-pending');
+          const displayName = (r.userName || '—').replace(/</g, '&lt;');
+          const displayCourse = (r.programName || r.programType || '—').replace(/</g, '&lt;');
+          const displayDate = (r.date || '—').replace(/</g, '&lt;');
+          const displayStatus = r.status || 'Pending';
+
+          myList.innerHTML += `
+            <div class="reg-item">
+              <div class="reg-info">
+                <h4>${displayName}</h4>
+                <div class="course">${displayCourse}</div>
+                <div class="date">Registered ${displayDate}</div>
+              </div>
+              <div class="status-badge ${statusClass}">${displayStatus}</div>
+            </div>
+          `;
+        });
+      }
+    }
+  </script>
+</body>
+</html>

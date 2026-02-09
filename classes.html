@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Courses | EduPort</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <style>
+    body { margin: 0; background: var(--bg); color: var(--text); }
+    .container { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+    header { text-align: center; margin-bottom: 2.5rem; }
+    h1 { font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 800; margin: 0 0 0.5rem; color: var(--text); letter-spacing: -0.02em; }
+    .subtitle { color: var(--text-muted); font-size: 1.05rem; }
+    #classList {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .course-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+    }
+    .course-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-light);
+    }
+    .badge {
+      background: var(--success-bg);
+      color: var(--success);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.35rem 0.75rem;
+      border-radius: 99px;
+      align-self: flex-start;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .course-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
+    .course-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.25rem; flex-grow: 1; line-height: 1.55; }
+    .course-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-light);
+      padding-top: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .course-meta span { display: flex; align-items: center; gap: 0.35rem; }
+    .btn-reg {
+      padding: 0.85rem;
+      border-radius: var(--radius);
+      font-size: 0.9375rem;
+    }
+  </style>
+</head>
+<body>
+  <script src="js/auth-guard.js"></script>
+  <nav class="navbar">
+    <a href="classes.html" class="brand"><i class="fas fa-graduation-cap"></i> EduPort</a>
+    <div class="links">
+      <a href="classes.html" class="active">Classes</a>
+      <a href="summer-camp.html">Summer Camp</a>
+      <a href="my-registrations.html">My Registrations</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header>
+      <h1>Courses</h1>
+      <p class="subtitle">Browse courses, enroll, and wait for admin approval.</p>
+    </header>
+    <div id="classList"></div>
+  </div>
+
+  <script src="js/register.js"></script>
+  <script>
+    (function() {
+      var defaultCourses = [
+        { id: 1, name: "Communication Skills", desc: "Effective verbal and written communication for work and life.", slots: 15, category: "Soft Skills" },
+        { id: 2, name: "Leadership & Teamwork", desc: "Lead with confidence and collaborate effectively in teams.", slots: 12, category: "Soft Skills" },
+        { id: 3, name: "Time Management", desc: "Prioritize tasks, meet deadlines, and boost productivity.", slots: 10, category: "Soft Skills" },
+        { id: 4, name: "Problem Solving & Critical Thinking", desc: "Analyze problems, evaluate options, and make better decisions.", slots: 12, category: "Soft Skills" },
+        { id: 5, name: "Emotional Intelligence", desc: "Self-awareness, empathy, and building strong relationships.", slots: 10, category: "Soft Skills" },
+        { id: 6, name: "Web Development Basics", desc: "HTML, CSS, and JavaScript to build your first websites.", slots: 12, category: "IT" },
+        { id: 7, name: "Python Programming", desc: "Learn programming fundamentals and automation with Python.", slots: 10, category: "IT" },
+        { id: 8, name: "Data Analytics", desc: "Work with data, spreadsheets, and basic analytics tools.", slots: 8, category: "IT" }
+      ];
+      var stored = localStorage.getItem('courses') || localStorage.getItem('tuitionCourses');
+      var courses = (stored && stored !== '[]') ? JSON.parse(stored) : defaultCourses;
+      var container = document.getElementById('classList');
+      if (!container) return;
+      container.innerHTML = '';
+      courses.forEach(function(course) {
+        var cat = course.category || 'Course';
+        var catIcon = cat === 'IT' ? 'fa-laptop-code' : 'fa-people-group';
+        container.innerHTML += `
+        <div class="course-card">
+          <span class="badge">${cat}</span>
+          <div class="course-title">${course.name}</div>
+          <p class="course-desc">${course.desc}</p>
+          <div class="course-meta">
+            <span><i class="fas ${catIcon}"></i> ${cat}</span>
+            <span><i class="fas fa-chair"></i> ${course.slots} seats left</span>
+          </div>
+          <button class="btn-reg" onclick="register('Course', ${course.id}, '${(course.name || '').replace(/'/g, "\\'")}')">Enroll now</button>
+        </div>
+      `;
+      });
+    })();
+  </script>
+</body>
+</html>

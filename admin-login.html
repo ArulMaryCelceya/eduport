@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Sign In | EduPort</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(165deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      color: var(--text);
+    }
+    .card {
+      background: var(--white);
+      padding: 2.5rem 2rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .icon {
+      width: 64px;
+      height: 64px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin: 0 auto 1.5rem;
+    }
+    h2 { font-size: 1.5rem; font-weight: 800; color: var(--text); margin: 0 0 0.35rem; letter-spacing: -0.02em; }
+    .subtitle { color: var(--text-muted); font-size: 0.9375rem; margin-bottom: 2rem; line-height: 1.5; }
+    .form-group { text-align: left; margin-bottom: 1.25rem; }
+    label { display: block; font-size: 0.875rem; margin-bottom: 0.5rem; }
+    input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      background: var(--bg);
+    }
+    button {
+      width: 100%;
+      padding: 0.875rem;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: 0.5rem;
+    }
+    .footer { margin-top: 1.5rem; font-size: 0.875rem; }
+    .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon"><i class="fas fa-user-shield"></i></div>
+    <h2>Admin sign in</h2>
+    <p class="subtitle">Use your admin credentials to manage registrations and settings.</p>
+    <div class="form-card">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="admin@example.com">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••">
+      </div>
+      <button onclick="adminLogin()">Sign in</button>
+    </div>
+    <p class="footer"><a href="index.html">← Back to home</a></p>
+  </div>
+  <script src="js/admin.js"></script>
+</body>
+</html>
